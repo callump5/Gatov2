@@ -1,0 +1,13 @@
+@font-face {
+    font-family: Cinzel;
+    src: url('/wp-content/themes/gatov2/public/fonts/Cinzel-VariableFont_wght.ttf');
+}
+
+*, h1, h2, h3, h4{
+    font-family: $theme-font;
+    color: $font-color !important;
+}
+
+ul {
+    list-style: '-';
+}

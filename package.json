@@ -1,0 +1,29 @@
+{
+  "name": "gatov2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "del": "^6.0.0",
+    "jquery": "^3.6.0",
+    "particlesjs": "^2.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/register": "^7.7.7",
+    "autoprefixer": "^10.3.1",
+    "babel": "^6.23.0",
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.0.2",
+    "live-server": "^1.2.1",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.7"
+  }
+}

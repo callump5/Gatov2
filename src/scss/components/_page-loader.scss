@@ -1,0 +1,25 @@
+#rks-page-loader {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 1s;
+
+    & img {
+        max-height: 50vh;
+        width: auto;
+        animation-name: example;
+        animation-duration: 2.4s;
+        animation-timing-function: ease;
+        animation-iteration-count: infinite;
+        opacity: 1;
+      }
+      
+      @keyframes example {
+        0% {opacity: 0.5;}
+        50% {opacity: 0.3;}
+        100% {opacity: .5;}
+      }
+};
