@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 
-<div class="container mx-auto w-7/12">
+<div class="container mx-auto w-5/12">
 
 <?php 
     if ( have_posts() ) {

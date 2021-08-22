@@ -32,6 +32,41 @@ $assets = [
     ]
 ];
 
+
+$shortcodes = [
+    'recent_posts',
+    'social_icons'
+];
+
+
+
+// Register theme shortcodes 
+function verlion_add_shortcodes(){
+
+    global $shortcodes;
+
+    foreach($shortcodes as $shortcode){
+        $filename =  dirname( __FILE__ ) .'/incs/shortcodes/verlion_' . $shortcode . '.php';
+        if(file_exists($filename)){
+            require($filename);
+        }
+    }
+}
+// Register the VC maps for the shortcodes 
+function verlion_vc_mapping(){
+
+    global $shortcodes;
+
+    foreach($shortcodes as $shortcode){
+        $vc_map_function = 'verlion_' . $shortcode . '_vc_map';
+        if(function_exists($vc_map_function)){
+            $vc_map_function();
+        }
+    }
+}
+
+
+
 /*** Enqueue All Assets ***/
 function verlion_enqueue_assets(){
 
@@ -65,7 +100,8 @@ function verlion_enqueue_assets(){
     }
 
 }
-add_action('wp_enqueue_scripts', 'verlion_enqueue_assets');
+
+
 
 
 
@@ -86,22 +122,18 @@ function verlion_enqueue_deferred_styles(){
         }
     }
 }
-add_action( 'get_footer', 'verlion_enqueue_deferred_styles' );
 
-
-/*** Nav Menu ***/
-function verlion_register_menus(){
-    register_nav_menus([
-        'left-menu' => __('Left Nav Menu', 'verlion'),
-        'right-menu' => __('Right Nav Menu', 'verlion')
-    ]);
-}
-add_action('after_setup_theme', 'verlion_register_menus');
 
 
 
 /*** Theme Support ***/
 function verlion_theme_support(){
+
+    // Nav Menus
+    register_nav_menus([
+        'left-menu' => __('Left Nav Menu', 'verlion'),
+        'right-menu' => __('Right Nav Menu', 'verlion')
+    ]);
 
     // Custom Background
     add_theme_support('custom-background');
@@ -118,7 +150,17 @@ function verlion_theme_support(){
         ]
     );
 }
-add_action( 'after_setup_theme', 'verlion_theme_support' );
+
+
+
+
+
+/*** Theme Actions ***/
+add_action('init',               'verlion_add_shortcodes');
+add_action('vc_before_init',     'verlion_vc_mapping' );
+add_action('wp_enqueue_scripts', 'verlion_enqueue_assets');
+add_action('get_footer',         'verlion_enqueue_deferred_styles' );
+add_action('after_setup_theme',  'verlion_theme_support' );
 
 
 

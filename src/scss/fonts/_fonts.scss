@@ -3,7 +3,7 @@
     src: url('/wp-content/themes/gatov2/public/fonts/Cinzel-VariableFont_wght.ttf');
 }
 
-*, h1, h2, h3, h4{
+h1, h2, h3, h4, h5, p, span, li, a {
     font-family: $theme-font;
     color: $font-color !important;
 }

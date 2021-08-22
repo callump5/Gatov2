@@ -5,15 +5,16 @@
   inset: 0;
   pointer-events: none; }
 
-#rks-page-loader {
+.rks-page__loader {
   position: fixed;
   inset: 0;
   background: #0a0a0a;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 1s; }
-  #rks-page-loader img {
+  transition: all 1s;
+  z-index: 999999 !important; }
+  .rks-page__loader img {
     max-height: 50vh;
     width: auto;
     animation-name: example;
@@ -29,6 +30,15 @@
     opacity: 0.3; }
   100% {
     opacity: .5; } }
+
+.rks-page__overlay {
+  position: fixed;
+  inset: 0;
+  background: #00000090;
+  z-index: 12382430;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s; }
 
 :root {
   --logo-width: 25%; }
@@ -84,7 +94,7 @@
   font-family: Cinzel;
   src: url("/wp-content/themes/gatov2/public/fonts/Cinzel-VariableFont_wght.ttf"); }
 
-*, h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, p, span, li, a {
   font-family: Cinzel;
   color: #cac1c1 !important; }
 

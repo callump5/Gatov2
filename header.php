@@ -12,12 +12,15 @@
 </head>
 <body <?php body_class(); ?>>
 
-<div id="rks-page-loader">
+<div id="rks-page-loader" class="rks-page__loader">
     <?php
         if ( function_exists( 'the_custom_logo' ) ) {
             the_custom_logo();
         }
     ?>
 </div>
+
+<div class="rks-page__overlay"></div>
+
 
 <?php echo get_template_part('/template-parts/navigation'); ?>
