@@ -1,7 +1,6 @@
 <?php get_header(); ?>
 
 
-<div class="container mx-auto w-5/12">
 
 <?php 
     if ( have_posts() ) {
@@ -19,6 +18,5 @@
         echo '<h2>There currently are no posts</h2>';
     }
 ?>
-</div>
 
 <?php get_footer(); ?>

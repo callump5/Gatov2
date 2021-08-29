@@ -2,12 +2,12 @@
 
 add_shortcode('verlion_recent_posts', 'verlion_recent_posts_function');
 
-function verlion_build_post_html($item, $class){
+function verlion_build_post_html($item, $class, $size){
 
     $className = $class . '__item';
 
     $post_id = $item->ID;
-    $featured_img = get_the_post_thumbnail($post_id);
+    $featured_img = get_the_post_thumbnail($post_id, $size);
 
     $item_html = "<div class={$className}>";
     $item_html .= $featured_img;
@@ -45,6 +45,7 @@ function verlion_recent_posts_function( $atts ){
         'exclude'          => [],
         'meta_key'         => '',
         'meta_value'       => '',
+        'post_type'        => 'portfolio',
     ]);
 
 
@@ -85,7 +86,7 @@ function verlion_recent_posts_function( $atts ){
     echo "<div class='{$class}'>";
         // Build post html
         foreach($posts as $post){
-            echo verlion_build_post_html($post, $class);
+            echo verlion_build_post_html($post, $class, 'medium');
         }
     echo "</div>";
 
@@ -102,34 +103,40 @@ function verlion_recent_posts_function( $atts ){
 function verlion_recent_posts_vc_map(){
 
     vc_map([
-        "name"      => "Verlion's Recent Posts/Projects",
-        "base"      => "verlion_recent_posts",
-        "class"     => "",
-        "category"  => "Verlion",
-        "params"    => [
+        "name"        => "Verlion's Recent Posts",
+        "description" => "This will display a grid of you selected post type",
+        "base"        => "verlion_recent_posts",
+        "class"       => "",
+        "category"    => "Verlion",
+        "params"      => [
             [
+                'heading'     => 'Title',
+                'description' => 'Enter a title for the widget (optional)',
                 'type'        => 'textfield',
                 'holder'      => 'div',
                 'param_name'  => 'title',
                 'value'       => '',
-                'description' => 'Enter a title for the widget'
             ],
             [
+                'heading'     => 'Number of Post',
+                'description' => 'Choose the amount of posts you would like to display',
                 'type'        => 'textfield',
                 'holder'      => 'div',
                 'param_name'  => 'num_posts',
                 'value'       => '3',
-                'description' => 'Choose the amount of posts you would like to display',
                 
             ],
             [
+                'heading'     => 'Category', 
+                'description' => 'Choose the post category you wish to display',
                 'admin_label' => 'Category',
-                'type'        => 'textfield',
                 'holder'      => 'div',
                 'param_name'  => 'post_category',
-                'value'       => '',
-                'description' => 'Choose the post category you wish to display',
-
+                'type'        => 'dropdown',
+                'value'       => [
+                    'option1label' => 'option1value',
+                ],
+             
             ]
         ]
     ]);

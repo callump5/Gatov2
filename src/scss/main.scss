@@ -1,10 +1,12 @@
 
+@import 'abstract/reset';
 @import 'abstract/variables';
+@import 'abstract/fonts';
+@import 'abstract/utilities';
+@import 'abstract/base';
 
 @import 'components/particles';
 @import 'components/page-loader';
 @import 'components/custom-logo';
 @import 'components/header';
 
-
-@import 'fonts/fonts';

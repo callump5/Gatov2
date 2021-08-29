@@ -5,26 +5,34 @@
 $assets = [
     'styles' => [
         'main' => [
-            'path' => '/public/css/main.css',
-            'dep'  => [],
-            'defer' => false,
+            'path'     => '/public/css/main.css',
+            'dep'      => [],
+            'defer'    => false,
+            'enabled'  => true
         ],
         'tailwind' => [
-            'path' => '/public/css/tailwind.css',
-            'dep'  => [],
-            'defer' => true,
+            'path'     => '/public/css/tailwind.css',
+            'dep'      => [],
+            'defer'    => true,
+            'enabled'  => false
         ]
     ],
     'scripts' => [
         'jQuery'  => [
-            'path'    => '/public/js/jquery.js',
-            'defer'   => false,
-            'dep'     => [],
-            'enabled' => false
+            'path'     => '/public/js/jquery.js',
+            'defer'    => false,
+            'dep'      => [],
+            'enabled'  => false
 
         ],
         'particleJS' => [
             'path'     => '/public/js/particles.min.js',
+            'defer'    => true,
+            'dep'      => [],
+            'enabled'  => true
+        ],
+        'themeJS' => [
+            'path'     => '/public/js/theme.js',
             'defer'    => true,
             'dep'      => [],
             'enabled'  => true
@@ -74,7 +82,8 @@ function verlion_enqueue_assets(){
 
     foreach ($assets['styles'] as $label => $asset){
 
-        if($asset['defer'] !== true){
+        if($asset['defer'] !== true && $asset['enabled'] === true){
+
             wp_enqueue_style(
                 $handle = $label,
                 $src    = get_template_directory_uri() . $asset['path'],
@@ -88,7 +97,7 @@ function verlion_enqueue_assets(){
 
     foreach ($assets['scripts'] as $label => $asset){
 
-        if($asset['enabled'] === true){
+        if($asset['enabled'] === true && $asset['enabled'] === true){
             wp_enqueue_script(
                 $handle    = $label,
                 $src       = get_template_directory_uri() . $asset['path'],
@@ -104,14 +113,14 @@ function verlion_enqueue_assets(){
 
 
 
-
 function verlion_enqueue_deferred_styles(){
 
     global $assets;
 
     foreach ($assets['styles'] as $label => $asset){
 
-        if($asset['defer'] === true) {
+        if($asset['defer'] === true && $asset['enabled'] === true) {
+              
             wp_enqueue_style(
                 $handle = $label,
                 $src    = get_template_directory_uri() . $asset['path'],
@@ -152,7 +161,7 @@ function verlion_theme_support(){
 }
 
 
-
+require_once('incs/post_types/verlion_portfolio.php');
 
 
 /*** Theme Actions ***/

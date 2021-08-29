@@ -17,7 +17,7 @@ const paths = {
 // Init Server (ENTER SERVER LOCATION)
 export const serve = (done) => {
     server.init({
-        proxy: "echo.cal"
+        proxy: "gatov2.cal"
     });
     done();
 }
