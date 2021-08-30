@@ -1,6 +1,6 @@
 <?php
 
-add_shortcode('verlion_recent_posts', 'verlion_recent_posts_function');
+add_shortcode('verlion_portfolio_grid', 'verlion_portfolio_grid_function');
 
 function verlion_build_post_html($item, $class, $size){
 
@@ -16,7 +16,7 @@ function verlion_build_post_html($item, $class, $size){
     return $item_html;
 }
 
-function verlion_recent_posts_function( $atts ){
+function verlion_portfolio_grid_function( $atts ){
    
     extract(shortcode_atts([
         'title',
@@ -28,7 +28,7 @@ function verlion_recent_posts_function( $atts ){
     // Assign Variables
     $num_posts = (isset($atts["num_posts"]))     ? $atts['num_posts']     : '3';  
     $category  = (isset($atts["post_category"])) ? $atts["post_category"] : '';
-    $class     = 'verlion_recent_posts';
+    $class     = 'verlion_portfolio_grid';
 
     // Create widget title
     if(isset($atts["title"])){
@@ -62,7 +62,6 @@ function verlion_recent_posts_function( $atts ){
             grid-gap: 10px;
             grid-template-columns: repeat(<?php echo $grid_cols; ?>, 1fr) !important;
             padding: 10px;
-            
         }
 
  
@@ -90,22 +89,35 @@ function verlion_recent_posts_function( $atts ){
         }
     echo "</div>";
 
-
-
-
-
-
-
-
 }
 
 
-function verlion_recent_posts_vc_map(){
+function verlion_portfolio_grid_vc_map(){
+
+
+    $categories =  get_terms([
+        'taxonomy' => 'portfolio-category',
+        'hide_empty' => false,
+    ]);
+
+
+    $categorySelect = [];
+
+    foreach($categories as $category){
+        $i = [
+            $category->term_id => $category->name
+        ];
+        array_push($categorySelect, $i);
+
+    }
+    
+
+    
 
     vc_map([
-        "name"        => "Verlion's Recent Posts",
-        "description" => "This will display a grid of you selected post type",
-        "base"        => "verlion_recent_posts",
+        "name"        => "Verlion's Portfolio",
+        "description" => "This will display a grid of your portfolio items",
+        "base"        => "verlion_portfolio_grid",
         "class"       => "",
         "category"    => "Verlion",
         "params"      => [
@@ -124,7 +136,6 @@ function verlion_recent_posts_vc_map(){
                 'holder'      => 'div',
                 'param_name'  => 'num_posts',
                 'value'       => '3',
-                
             ],
             [
                 'heading'     => 'Category', 
@@ -133,10 +144,7 @@ function verlion_recent_posts_vc_map(){
                 'holder'      => 'div',
                 'param_name'  => 'post_category',
                 'type'        => 'dropdown',
-                'value'       => [
-                    'option1label' => 'option1value',
-                ],
-             
+                'value'       => $categorySelect
             ]
         ]
     ]);

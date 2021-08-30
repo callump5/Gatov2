@@ -8,54 +8,66 @@ class VerlionPortfolio{
     public function __construct(){
         $this->fields = [
             0 => [
-                'handle'     => 'video',
-                'title'      => 'Featured Animated Image',
-                'description' => 'Select the animation you would like to display',
-                'pos'        => 'side',
-                'priority'   => 'low',
-                'type'       => 'image',
-                'class'      => 'test',
-                'name'       => 'verlion_video_metabox',
+                'handle'        => 'video',
+                'title'         => 'Featured Animated Image',
+                'description'   => 'Select the animation you would like to display',
+                'pos'           => 'side',
+                'priority'      => 'low',
+                'type'          => 'image',
+                'class'         => 'test',
+                'name'          => 'verlion_video_metabox',
                 'meta_handle'   => 'verlion_video_meta',
-                'options'    => '',
-                'viewable'   => false,
+                'options'       => '',
+                'viewable'      => false,
                 'is_filterable' => false,
-                'default'    => ''
+                'default'       => ''
             ],
             1 => [
-                'handle'     => 'rank',
-                'title'      => 'Listing Rank',
-                'description' => 'Enter the number you rank the post by',
-                'pos'        => 'side',
-                'priority'   => 'low',
-                'type'       => 'number',
-                'class'      => 'test',
-                'name'       => 'verlion_rank_metabox',
+                'handle'        => 'rank',
+                'title'         => 'Listing Rank',
+                'description'   => 'Enter the number you rank the post by',
+                'pos'           => 'side',
+                'priority'      => 'low',
+                'type'          => 'number',
+                'class'         => 'test',
+                'name'          => 'verlion_rank_metabox',
                 'meta_handle'   => 'verlion_rank_meta',
-                'options'    => '',
-                'viewable'   => false,
+                'options'       => '',
+                'viewable'      => false,
                 'is_filterable' => false,
-                'default'    => '99'
+                'default'       => '99'
             ]
         ];
         
         register_post_type( 'portfolio', [
             'labels' => [
-                'name' => __( 'Portfolio' ),
-                'singular_name' => __( 'Portfolio' )
+                'name'          => 'Portfolio',
+                'singular_name' => 'Portfolio'
             ],
-            'public' => true,
-            'has_archive' => true,
-            'supports' => ['title', 'editor', 'custom-fields'],
-            'menu_position' => 3,
-			'show_in_rest' => true,
-			'posts_per_page' => -1
+            'public'            => true,
+            'has_archive'       => true,
+            'supports'          => ['title', 'editor', 'custom-fields'],
+            'menu_position'     => 3,
+			'show_in_rest'      => true,
+			'posts_per_page'    => -1
         ] );
+
+
+        register_taxonomy('portfolio-category', ['portfolio'], [
+            'hierarchical'      => true,
+            'labels'            => [
+                'name'          => 'Categories',
+                'singular_name' => 'Category'
+            ],
+            'show_ui'           => true,
+            'query_var'         => true,
+            'rewrite'           => [ 'slug' => 'category' ],
+        ]);
         
+
         add_post_type_support( 'portfolio', 'thumbnail' );    
     }
-    
-    
+        
     public function verlion_portfolio_add_metaboxes(){
        $CPMeta = new MetaBox($this->fields);
        $CPMeta->add_box();

@@ -42,8 +42,8 @@ $assets = [
 
 
 $shortcodes = [
-    'recent_posts',
-    'social_icons'
+    'portfolio_grid',
+    // 'social_icons'
 ];
 
 
@@ -71,6 +71,7 @@ function verlion_vc_mapping(){
             $vc_map_function();
         }
     }
+
 }
 
 
