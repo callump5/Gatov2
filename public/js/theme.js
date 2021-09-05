@@ -46,4 +46,49 @@ window.onload = () => {
 
     menuToggle.onclick = openMenu;
     mobileMenu.onclick = closeMenu;
-};
+
+
+    
+    // Lazy Loading 
+    let options = {
+        root: document.querySelector('#scrollArea'),
+        rootMargin: '0px',
+        threshold: 0.0001
+    }
+
+
+    let assetLoaded = 0;
+
+    let callback = (entries, observer) => {
+
+        if(assetLoaded < assetCount){
+            console.log(assetCount, assetLoaded);
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                    if(entry.target.tagName === 'IMG'){
+
+                        let dataSrc = entry.target.getAttribute('data-src');
+                        let src     = entry.target.getAttribute('src');
+
+                        if(dataSrc !== src){
+                            entry.target.setAttribute('src', dataSrc);
+                            assetLoaded++;
+                        }
+                    } else if(entry.target.tagName === 'VIDEO'){
+                        if(entry.target.paused){
+                            entry.target.play();
+                            assetLoaded++;
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    let observer = new IntersectionObserver(callback, options);
+    let targets = document.querySelectorAll('.verlion-lazy-loaded');
+    let assetCount  = targets.length;    
+    targets.forEach(target => {
+        observer.observe(target);
+    })
+}

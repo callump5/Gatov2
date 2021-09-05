@@ -1,5 +1,6 @@
 <?php
 
+require_once('incs/helpers/functions.php');
 
 /*** Define Assets ***/
 $assets = [
