@@ -1,79 +1,46 @@
 <?php
 
+
+// TODO: Line 57 categories dyanmic select
+// TODO: Line 66 Meta value 
+// TODO: Skin Select
+// TODO: Group the VC maps fields on tabs 
+// TODO: Refactor
+
 add_shortcode('verlion_portfolio_grid', 'verlion_portfolio_grid_function');
-
-function verlion_build_post_html($item, $class, $size, $lazy_load = false, $animate = false){
-
-    $className        = $class . '__item';
-    $post_id          = $item->ID;
-    $placeholder      = '/wp-content/themes/gatov2/public/imgs/placeholder.jpg';
-    $featured_img     = get_the_post_thumbnail_url($post_id, $size);
-    $featured_img_url = ($featured_img) ? $featured_img : $placeholder;
-    $height           = (get_option( "{$size}_size_w" )) ? get_option( "{$size}_size_w" ) : '300';
-    $width            = (get_option( "{$size}_size_h" )) ? get_option( "{$size}_size_h" ) : '300';
-    $img_class        = '';
-    $data_src         = '';
-    $asset_title      = get_the_title($post_id) . ' album artwork preview';
-    
-    $id = 'asset_' . $post_id;
-
-    if($lazy_load === true and $featured_img_url){
-        $img_class .= 'verlion-lazy-loaded';
-        $src        = $placeholder;
-        $data_src   = $featured_img_url;
-    } else {
-        $src        = $featured_img_url;
-    }
-
-    $asset_html = "<img id='{$id}' class='{$img_class}' title='{$asset_title}' data-src='{$data_src}' src='{$src}' height='{$height}' width='{$width}'/>";
-
-    if($animate === true){
-        $lazy_attrs = '';
-        if($lazy_load === true){
-            $lazy_attrs = "preload='none' poster='{$placeholder}'";
-        }
-        $post_video_thumb  = get_post_meta($post_id, 'verlion_video_meta', true);
-
-        if($post_video_thumb){
-            $asset_html  = "<video id='{$id}' class='verlion-lazy-loaded' {$lazy_attrs} title='{$asset_title}' autoplay loop>";
-            $asset_html .= "<source src='{$post_video_thumb}' type='video/mp4'>";
-            $asset_html .= "</video>";
-        }
-    }
-
-
-    // dd($featured_img);
-
-    $item_html = "<div class={$className}>";
-    $item_html .= $asset_html;
-    $item_html .= "</div>";
-
-    return $item_html;
-}
 
 function verlion_portfolio_grid_function( $atts ){
    
     extract(shortcode_atts([
         'title',
-        'post_category',
+        'portfolio_category',
         'num_posts',
         'grid_cols',
         'grid_gap',
         'padding',
         'animated_thumb',
-        'class'
+        'class',
+        'lazy_img',
+        'lazy_vid',
+        'order_by',
+        'order_direction'
     ], $atts));
 
 
     // Assign Variables
+
+    $post_type = (isset($atts['post_type'])) ? $atts['post_type'] : 'portfolio';
     $num_posts = (isset($atts["num_posts"]) && intval($atts["num_posts"]) > 0 ) ? intval($atts['num_posts']) : -1;  
-    $category  = (isset($atts["post_category"])) ? $atts["post_category"] : '0';
+    $category  = (isset($atts["portfolio_category"])) ? $atts["portfolio_category"] : '0';
     $grid_cols = (isset($atts["grid_cols"])) ? $atts["grid_cols"] : '3';
     $grid_gap  = (isset($atts["grid_gap"])) ? $atts["grid_gap"] : '10px';
     $padding   = (isset($atts["padding"])) ? $atts["padding"] : '10px';
-    $animate   = ($atts["animated_thumb"] === 'true') ? true : false;
     $class     = (isset($atts["class"])) ? $atts["class"] : 'verlion_portfolio_grid';
-
+    $lazy_img  = (isset($atts["lazy_img"])) ? (bool) $atts["lazy_img"] : false;
+    $lazy_vid  = (isset($atts["lazy_vid"])) ? (bool) $atts["lazy_vid"] : false;
+    $animate   = (isset($atts["animated_thumb"]) && (bool) $atts["animated_thumb"] === true) ? true : false;
+    $order_by  = (isset($atts["order_by"])) ? $atts["order_by"] : 'meta_value';
+    $order_direction = (isset($atts["order_direction"])) ? $atts["order_direction"] : 'ASC'; 
     
     // Create widget title
     if(isset($atts["title"])){
@@ -83,11 +50,11 @@ function verlion_portfolio_grid_function( $atts ){
     // Get posts
     if($category > 0){
         $posts = get_posts([
-            'post_type'        => 'portfolio',
+            'post_type'        => $post_type,
             'numberposts'      => $num_posts,
             'meta_key'         => 'verlion_rank_meta',
-            'orderby'          => 'meta_value',
-            'order'            => 'ASC',
+            'orderby'          => $order_by,
+            'order'            => $order_direction,
             'tax_query' => [
                 [
                     'taxonomy' => 'portfolio-category',
@@ -98,13 +65,15 @@ function verlion_portfolio_grid_function( $atts ){
         ]);
     } else {
         $posts = get_posts([
-            'post_type'        => 'portfolio',
             'numberposts'      => $num_posts,
             'meta_key'         => 'verlion_rank_meta',
-            'orderby'          => 'meta_value',
-            'order'            => 'ASC',
+            'orderby'          => $order_by,
+            'order'            => $order_direction,
         ]);
     }
+
+
+    dd($posts);
     ?>
 
     <style>
@@ -133,7 +102,7 @@ function verlion_portfolio_grid_function( $atts ){
     echo "<div class='{$class}'>";
         // Build post html
         foreach($posts as $post){
-            echo verlion_build_post_html($post, $class, 'medium', true, $animate);
+            echo verlion_build_post_html($post, $class, 'medium', $lazy_img, $lazy_vid, $animate);
         }
     echo "</div>";
 
@@ -141,24 +110,36 @@ function verlion_portfolio_grid_function( $atts ){
 
 function verlion_portfolio_grid_vc_map(){
 
-    $categories =  get_terms([
+    $default = [
+        'id'    => '',
+        'value' => 'Select a category' 
+    ];
+    
+    $portfolioCategorySelect = [];
+    $postCategorySelect = [];
+
+    array_push($portfolioCategorySelect, $default);
+    array_push($postCategorySelect, $default);
+    // dd($postCategorySelect);
+
+    $portfolioCategories =  get_terms([
         'taxonomy' => 'portfolio-category',
         'hide_empty' => false,
     ]);
 
-    $categorySelect = [
+    $portfolioCategorySelect = [
         [
             'id'    => '',
             'value' => 'Select a category' 
         ]
     ];
 
-    foreach($categories as $category){
+    foreach($portfolioCategories as $category){
         $i = [
             'id'    => $category->term_id,
             'value' => $category->name
         ];
-        array_push($categorySelect, $i);
+        array_push($portfolioCategorySelect, $i);
     }
 
 
@@ -177,6 +158,7 @@ function verlion_portfolio_grid_vc_map(){
                 'holder'      => 'div',
                 'param_name'  => 'title',
                 'value'       => '',
+                
             ],
             [
                 'heading'     => 'Number of Post',
@@ -211,13 +193,43 @@ function verlion_portfolio_grid_vc_map(){
                 'value'       => '10px',
             ],
             [
-                'heading'     => 'Category', 
+                'heading'     => 'Post Type', 
+                'description' => 'What would you like to display?',
+                'admin_label' => 'Post Type',
+                'holder'      => 'div',
+                'param_name'  => 'post_type',
+                'type'        => 'dropdown',
+                'value'       => [
+                    'Select an option'  =>  '',
+                    'Posts'             =>  'posts',
+                    'Portfolio'         =>  'portfolio'
+                ]
+            ],
+            [
+                'heading'     => 'Portfolio Category', 
+                'description' => 'Choose the portfolio category you wish to display',
+                'admin_label' => 'Category',
+                'holder'      => 'div',
+                'param_name'  => 'portfolio_category',
+                'type'        => 'dropdown',
+                'value'       => $portfolioCategorySelect,
+                'dependency'    => array(
+                    'element'   => 'post_type',
+                    'value'     => 'portfolio'
+                ),
+            ],
+            [
+                'heading'     => 'Post Category', 
                 'description' => 'Choose the post category you wish to display',
                 'admin_label' => 'Category',
                 'holder'      => 'div',
                 'param_name'  => 'post_category',
                 'type'        => 'dropdown',
-                'value'       => $categorySelect
+                'value'       => $postCategorySelect,
+                'dependency'    => array(
+                    'element'   => 'post_type',
+                    'value'     => 'posts'
+                ),
             ],
             [
                 'heading'     => 'Animated Thumbnails', 
@@ -230,6 +242,58 @@ function verlion_portfolio_grid_vc_map(){
                     'Select an option'  =>  '',
                     'True'              =>  'true',
                     'False'             =>  'false'
+                ]
+            ],
+            [
+                'heading'     => 'Lazy Load Images', 
+                'description' => 'Defer loading of images until visiable on screen, speeds up page if lots of assets present',
+                'admin_label' => 'Lazy Load Images',
+                'holder'      => 'div',
+                'param_name'  => 'lazy_img',
+                'type'        => 'dropdown',
+                'value'       => [
+                    'Select an option'  =>  '',
+                    'True'              =>  'true',
+                    'False'             =>  'false'
+                ]
+            ],
+            [
+                'heading'     => 'Lazy Load Videos', 
+                'description' => 'Defer loading of videos until visiable on screen, speeds up page if lots of assets present.',
+                'admin_label' => 'Lazy Load Videos',
+                'holder'      => 'div',
+                'param_name'  => 'lazy_vid',
+                'type'        => 'dropdown',
+                'value'       => [
+                    'Select an option'  =>  '',
+                    'True'              =>  'true',
+                    'False'             =>  'false'
+                ]
+            ],
+            [
+                'heading'     => 'Order By', 
+                'description' => 'Choose what you would like to order the posts by',
+                'admin_label' => 'Order By',
+                'holder'      => 'div',
+                'param_name'  => 'order_by',
+                'type'        => 'dropdown',
+                'value'       => [
+                    'Select an option'  =>  '',
+                    'Ranking'           =>  'meta_value',
+                    'Date'             =>  'date'
+                ]
+            ],
+            [
+                'heading'     => 'Order Direction', 
+                'description' => 'Choose the direction to order',
+                'admin_label' => 'Order Direction',
+                'holder'      => 'div',
+                'param_name'  => 'order_direction',
+                'type'        => 'dropdown',
+                'value'       => [
+                    'Select an option'  =>  '',
+                    'Ascending'           =>  'ASC',
+                    'Descending'          =>  'DESC'
                 ]
             ]
         ]

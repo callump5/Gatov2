@@ -502,11 +502,17 @@ ul {
     max-width: 1140px; } }
 
 .rks-page__container {
-  width: 70%; }
+  width: 70%;
+  padding-bottom: 40px; }
 
 @media screen and (min-width: 1000px) {
   .rks-page__container {
     width: 55%; } }
+
+.rks-featured-img {
+  width: 100%;
+  max-width: 390px;
+  margin: 20px auto; }
 
 .particle-js {
   width: 100%;
@@ -515,41 +521,6 @@ ul {
   inset: 0;
   pointer-events: none;
   z-index: 1000; }
-
-.rks-page__loader {
-  position: fixed;
-  inset: 0;
-  background: #0a0a0a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 1s;
-  z-index: 999999 !important; }
-  .rks-page__loader img {
-    max-height: 50vh;
-    width: auto;
-    animation-name: example;
-    animation-duration: 2.4s;
-    animation-timing-function: ease;
-    animation-iteration-count: infinite;
-    opacity: 1; }
-
-@keyframes example {
-  0% {
-    opacity: 0.5; }
-  50% {
-    opacity: 0.3; }
-  100% {
-    opacity: .5; } }
-
-.rks-page__overlay {
-  position: fixed;
-  inset: 0;
-  background: #00000090;
-  z-index: 12382430;
-  opacity: 0;
-  pointer-events: none;
-  transition: all .3s; }
 
 :root {
   --logo-width: 80%; }

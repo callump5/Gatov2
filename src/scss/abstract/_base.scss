@@ -1,6 +1,7 @@
 .rks-page{
     &__container {
         width: 70%;
+        padding-bottom: 40px;
     }
 }
 
@@ -13,3 +14,11 @@
     }
     
 }
+
+
+.rks-featured-img {
+    width:100%;
+    max-width: 390px; 
+    margin: 20px auto;
+}
+

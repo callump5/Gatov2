@@ -62,7 +62,6 @@ window.onload = () => {
     let callback = (entries, observer) => {
 
         if(assetLoaded < assetCount){
-            console.log(assetCount, assetLoaded);
             entries.forEach(entry => {
                 if(entry.isIntersecting){
                     if(entry.target.tagName === 'IMG'){

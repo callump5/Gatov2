@@ -1,6 +1,7 @@
 <?php
 
 require_once('incs/helpers/functions.php');
+require_once('incs/helpers/verlion_post_builder.php');
 
 /*** Define Assets ***/
 $assets = [
@@ -8,7 +9,7 @@ $assets = [
         'main' => [
             'path'     => '/public/css/main.css',
             'dep'      => [],
-            'defer'    => false,
+            'defer'    => true,
             'enabled'  => true
         ],
         'tailwind' => [
