@@ -1,0 +1,71 @@
+.gato-settings {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: row;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px 0px #00000030;
+}
+
+.gato-settings__nav {
+    background: #242f41;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+
+}
+
+.gato-settings__nav__item {
+    padding: 15px 30px 15px 20px ;
+    list-style: none;
+    font-size: 15px;
+    margin: 0;
+}
+
+.gato-settings__nav__item:not(:last-child) {
+    border-bottom: 1px solid #ffffff30;
+}
+
+.gato-settings__nav__item__link {
+    text-decoration: none;
+
+    color: #fff
+
+}
+
+.gato-settings__nav__item__icon  {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.gato-settings__content{
+    padding: 0px 30px 20px;
+}
+
+.gato-settings__field {
+    margin-bottom:20px
+
+}
+
+
+.gato-settings__field label {
+    display: inline-block;
+    width: 150px !important;
+}
+.gato-settings__field input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #00000040
+}
+
+[name="gato-core-submit"]{
+
+    background-color: #242f41;;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 25px;
+    color: #fff;
+
+    box-shadow: 0px 0px 5px 0px #00000030;
+
+}
